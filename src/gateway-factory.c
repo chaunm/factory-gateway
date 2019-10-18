@@ -98,9 +98,9 @@ int main(int argc, char* argv[])
 		printf("invalid options, using -h for help\n");
 		return EXIT_FAILURE;
 	}
-	printf("sizeof sensor_tag %d\n", (int)sizeof(SENSOR));
+//	printf("sizeof sensor_tag %d\n", (int)sizeof(SENSOR));
 	// Start MQTT client
-//	FactorActorStart(&actorOption);
+	FactorActorStart(&actorOption);
 
 	/* end options processing */
 	/* open serial port and init queue for serial communication */
