@@ -8,14 +8,11 @@
 #ifndef UART_DATA_H_
 #define UART_DATA_H_
 #include "serialcommunication.h"
-#pragma pack(1)
-typedef struct tagUARTPACKAGE {
-	BYTE nStart;
-	BYTE nLength;
-	BYTE nType;
-	WORD nAddress;
-	BYTE pData[];
-} UARTPACKAGE, *PUARTPACKAGE;
+
+#define __BUFFER_LENGTH(pBuffer)	(pBuffer[1])
+#define __BUFFER_TYPE(pBuffer)		(pBuffer[2])
+#define __BUFFER_ADDRESS(pBuffer)	(*(PWORD)(pBuffer + 3))
+#define __BUFFER_DATA(pBuffer)		(pBuffer + 5)
 
 #define _UARTPACKAGE(pBuffer)  (PUARTPACKAGE)(pBuffer)
 

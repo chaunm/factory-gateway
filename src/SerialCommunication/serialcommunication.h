@@ -20,7 +20,7 @@
 #define SERIAL_QUEUE_SIZE			32
 
 /* Serial management data struct */
-#pragma pack(1)
+#pragma pack (1)
 typedef struct stSerial {
 	unsigned int uiBaudrate;
 	int	tty_fd;

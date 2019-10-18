@@ -9,7 +9,7 @@
 #define SENSOR_H_
 
 #include "typesdef.h"
-#define NUMBER_OF_SENSORS		30
+#define NUMBER_OF_SENSORS		32
 
 enum {
 	TEMP_HIGH_REG = 16,
@@ -33,11 +33,13 @@ typedef enum {
 	TYPE_HUMI
 } sensor_t;
 
+#pragma pack (1)
 typedef struct tagSENSORREG {
 	BYTE reg;
 	BYTE value;
 }SENSORREG, *PSENSORREG;
 
+#pragma pack (1)
 typedef struct tagSENSOR {
 	WORD address;
 	WORD Humi;
@@ -53,5 +55,6 @@ VOID SensorUpdateParam(WORD address, WORD param, WORD value);
 WORD GetSensorAddress(BYTE nIndex);
 VOID SensorSendStates(WORD address);
 VOID SensorSendSingleState(WORD address, sensor_t type);
+BYTE SensorGetReg(WORD address, BYTE reg);
 
 #endif /* SENSOR_H_ */

@@ -21,7 +21,7 @@
 typedef void (*ACTORCALLBACKFN)(void*);
 
 typedef void* CallbackParam;
-
+#pragma pack (1)
 typedef struct tagACTOROPTION {
 	char* guid;
 	char* psw;
@@ -32,6 +32,7 @@ typedef struct tagACTOROPTION {
 	char* clientKey;
 } ACTOROPTION, *PACTOROPTION;
 
+#pragma pack(1)
 typedef struct tagACTOR {
 	struct mosquitto* client;
 	int DeliveredToken;
