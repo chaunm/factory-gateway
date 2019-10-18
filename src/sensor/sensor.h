@@ -33,7 +33,7 @@ typedef enum {
 	TYPE_HUMI
 } sensor_t;
 
-#pragma pack (1)
+//#pragma pack (1)
 typedef struct tagSENSORREG {
 	BYTE reg;
 	BYTE value;
