@@ -39,7 +39,7 @@ typedef struct tagSENSORREG {
 	BYTE value;
 }SENSORREG, *PSENSORREG;
 
-#pragma pack (1)
+
 typedef struct tagSENSOR {
 	WORD address;
 	WORD Humi;
