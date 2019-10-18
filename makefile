@@ -6,7 +6,7 @@
 
 RM := rm
 
-export CC=arm-linux-gnueabihf-gcc
+export CC=gcc
 
 # All of the sources participating in the build are defined here
 -include sources.mk
@@ -64,8 +64,7 @@ all: gateway-factory
 gateway-factory: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	arm-linux-gnueabihf-g++  -o "gateway-factory" $(OBJS) $(USER_OBJS) $(LIBS)
-	@echo 'Finished building target: $@'
+	gcc  -o "gateway-factory" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo ' '
 
 # Other Targets
