@@ -18,11 +18,17 @@
 #include "serialcommunication.h"
 #include "universal.h"
 #include "data-handler.h"
+#ifdef PI_RUNNING // include wiringPi to control Pi GPIO for selecting RF mode.
+#include "wiringPi.h"
+#define M0_PIN	17
+#define M1_PIN	27
+#define AUX_PIN	22
+#endif
 
 void PrintHelpMenu()
 {
 	printf("usage: gateway-factory --host <mqtt_broker> --port <mqtt-port> --id <user name> --password <user password>"\
-			"--serial <UART port> --ca <ca-file> --cert <client cert> --key <client key>\n");
+			"--serial <UART port> --cafile <ca-file> --cert <client cert> --key <client key>\n");
 }
 
 int main(int argc, char* argv[])
@@ -98,12 +104,21 @@ int main(int argc, char* argv[])
 		printf("invalid options, using -h for help\n");
 		return EXIT_FAILURE;
 	}
-//	printf("sizeof sensor_tag %d\n", (int)sizeof(SENSOR));
+	/* end options processing */
+#if PI_RUNNING
+	wiringPiSetupSys();
+	pinMode(M0_PIN, OUTPUT);
+	pinMode(M1_PIN, OUTPUT);
+	pinMode(AUX_PIN, INPUT);
+	digitalWrite(M0_PIN, LOW);
+	digitalWrite(M1_PIN, LOW);
+#endif
 	// Start MQTT client
 	FactorActorStart(&actorOption);
-
-	/* end options processing */
+	
 	/* open serial port and init queue for serial communication */
+	/* Configure GPIO to control the RF mode - choose mode 0 */
+
 	char* portName = malloc(strlen("/dev/") + strlen(SerialPort) + 1);
 	memset(portName, 0, strlen("/dev/") + strlen(SerialPort) + 1);
 	sprintf(portName, "%s%s", "/dev/", SerialPort);
