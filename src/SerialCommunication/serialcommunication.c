@@ -138,6 +138,7 @@ static VOID SerialHandleIncomingBuffer(PSERIAL pSerialPort, PBYTE pBuffer, BYTE 
 	BYTE nReceiveIndex;
 	for (nReceiveIndex = 0; nReceiveIndex < nSize; nReceiveIndex++)
 	{
+		printf("handle %d incoming byte\n", nSize);
 		SerialHandleIncomingByte(pSerialPort, pBuffer[nReceiveIndex]);
 	}
 
@@ -159,7 +160,7 @@ VOID SerialProcessIncomingData(PSERIAL pSerialPort)
 		while (byReceiveByte > 0)
 		{
 			SerialHandleIncomingBuffer(pSerialPort, pReceiveBuffer, byReceiveByte);
-			usleep(30);
+			usleep(100);
 			byReceiveByte = read(pSerialPort->tty_fd, pReceiveBuffer, 255);
 		}
 		usleep(1000);
