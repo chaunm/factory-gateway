@@ -20,9 +20,9 @@
 #include "data-handler.h"
 #ifdef PI_RUNNING // include wiringPi to control Pi GPIO for selecting RF mode.
 #include <wiringPi.h>
-#define M0_PIN	17
+#define M0_PIN	22
 #define M1_PIN	27
-#define AUX_PIN	22
+#define AUX_PIN	17
 #endif
 
 void PrintHelpMenu()
@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
 	/* end options processing */
 #ifdef PI_RUNNING
 	char *command = (char*)malloc(150);
-	printf("Init IO for control gsm\n");
+	printf("Init IO for controlling RF module\n");
 	sprintf(command, "gpio export %d out", M0_PIN);
 	system(command);
 	sprintf(command, "gpio export %d out", M1_PIN);
