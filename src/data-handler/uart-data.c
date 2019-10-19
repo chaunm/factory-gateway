@@ -10,8 +10,8 @@
 #include "sensor.h"
 #include "factory-actor.h"
 
-static BYTE reqRegs[11] = { 255, 255, 23, 170, 5, 14, 31, 0, 1, 3, 85  };
-//static BYTE reqParams[11] = { 255, 255, 23, 31, 0, 1, 4, 85  };
+static BYTE reqRegs[8] = {  170, 5, 14, 31, 0, 1, 3, 85  };
+static BYTE reqParams[8] = { 170, 5, 14, 31, 0, 1, 4, 85  };
 static BYTE sensorIndex = 25;
 
 static void UartHandleRegisterPackage(PBYTE pBuffer)
@@ -74,10 +74,13 @@ void UartHandleBuffer(PBYTE pBuffer, BYTE size)
 
 void UartSendSensorRequestRegister(PSERIAL pSerial)
 {
-	PBYTE pBuffer = reqRegs + 3;
+	PBYTE pBuffer = reqRegs;
 	printf("request sensor %d\n", sensorIndex);
 	__BUFFER_ADDRESS(pBuffer) = GetSensorAddress(sensorIndex);
 	SerialOutput(pSerial, reqRegs, sizeof(reqRegs));
+	pBuffer = reqParams;
+	__BUFFER_ADDRESS(pBuffer) = GetSensorAddress(sensorIndex);
+	SerialOutput(pSerial, reqParams, sizeof(reqParams));
 	sensorIndex++;
 	if(sensorIndex == NUMBER_OF_SENSORS)
 		sensorIndex = 0;

@@ -136,9 +136,9 @@ static VOID SerialHandleIncomingByte(PSERIAL pSerialPort, BYTE byData)
 static VOID SerialHandleIncomingBuffer(PSERIAL pSerialPort, PBYTE pBuffer, BYTE nSize)
 {
 	BYTE nReceiveIndex;
+	printf("handle %d incoming bytes\n", nSize);
 	for (nReceiveIndex = 0; nReceiveIndex < nSize; nReceiveIndex++)
 	{
-		printf("handle %d incoming byte\n", nSize);
 		SerialHandleIncomingByte(pSerialPort, pBuffer[nReceiveIndex]);
 	}
 
