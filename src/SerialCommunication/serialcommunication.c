@@ -90,7 +90,7 @@ VOID SerialClose(PSERIAL pSerialPort)
  */
 static VOID SerialHandleIncomingByte(PSERIAL pSerialPort, BYTE byData)
 {
-	printf("index %d, byte %d\n", g_nPackageIndex, byData);
+	// printf("index %d, byte %d\n", g_nPackageIndex, byData);
 	if ((g_nPackageIndex == 0) && (byData == PACKAGE_START_BYTE))
 	{
 		g_pReceivePackage[g_nPackageIndex] = PACKAGE_START_BYTE;
@@ -136,7 +136,7 @@ static VOID SerialHandleIncomingByte(PSERIAL pSerialPort, BYTE byData)
 static VOID SerialHandleIncomingBuffer(PSERIAL pSerialPort, PBYTE pBuffer, BYTE nSize)
 {
 	BYTE nReceiveIndex;
-	printf("handle %d incoming bytes\n", nSize);
+	// printf("handle %d incoming bytes\n", nSize);
 	for (nReceiveIndex = 0; nReceiveIndex < nSize; nReceiveIndex++)
 	{
 		SerialHandleIncomingByte(pSerialPort, pBuffer[nReceiveIndex]);
