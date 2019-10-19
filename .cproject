@@ -31,9 +31,15 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gateway-factory/src/sensor}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gateway-factory/src/SerialCommunication}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gateway-factory/src/universal}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/actor}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/data-handler}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/Queue}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/sensor}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/SerialCommunication}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/universal}&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.dialect.std.846680612" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" value="gnu.cpp.compiler.dialect.default" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.option.optimization.level.1995479202" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.optimization.level.1995479202" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" value="gnu.cpp.compiler.optimization.level.optimize" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.debugging.level.2016352917" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.debugging.prof.2051848796" name="Generate prof information (-p)" superClass="gnu.cpp.compiler.option.debugging.prof" value="true" valueType="boolean"/>
 								<option id="gnu.cpp.compiler.option.debugging.gprof.1154453033" name="Generate gprof information (-pg)" superClass="gnu.cpp.compiler.option.debugging.gprof" value="true" valueType="boolean"/>
@@ -44,12 +50,12 @@
 									<listOptionValue builtIn="false" value="PC_RUNNING"/>
 								</option>
 								<option id="gnu.c.compiler.option.include.paths.1450705699" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gateway-factory/src/actor}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gateway-factory/src/data-handler}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gateway-factory/src/Queue}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gateway-factory/src/sensor}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gateway-factory/src/SerialCommunication}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gateway-factory/src/universal}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/actor}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/data-handler}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/Queue}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/sensor}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/SerialCommunication}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/universal}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.dialect.std.730918342" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.prof.387579111" name="Generate prof information (-p)" superClass="gnu.c.compiler.option.debugging.prof" value="true" valueType="boolean"/>
@@ -80,6 +86,12 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gateway-factory/src/sensor}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gateway-factory/src/SerialCommunication}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gateway-factory/src/universal}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/actor}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/data-handler}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/Queue}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/sensor}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/SerialCommunication}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/factory-gateway/src/universal}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1273636248" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>

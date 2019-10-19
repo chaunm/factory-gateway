@@ -38,11 +38,13 @@ typedef void* 					PVOID;
 #define TRUE					1
 #define FALSE					0
 
+//#pragma pack (1)
 typedef struct tagREGISTER {
 	BYTE reg;
 	BYTE value;
 } REGISTER, *PREGISTER;
 
+//#pragma pack (1)
 typedef struct tagPARAMTER {
 	WORD param;
 	WORD value;

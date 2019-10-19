@@ -98,8 +98,8 @@ int main(int argc, char* argv[])
 		printf("invalid options, using -h for help\n");
 		return EXIT_FAILURE;
 	}
-
-
+//	printf("sizeof sensor_tag %d\n", (int)sizeof(SENSOR));
+	// Start MQTT client
 	FactorActorStart(&actorOption);
 
 	/* end options processing */
@@ -130,7 +130,7 @@ int main(int argc, char* argv[])
 	{
 //		DeviceProcessTimeout();
 		UartSendSensorRequestRegister(pSerialPort);
-		sleep(1);
+		usleep(1500000);
 	}
 	SerialClose(pSerialPort);
 	return EXIT_SUCCESS;

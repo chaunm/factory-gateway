@@ -10,57 +10,62 @@
 #include "sensor.h"
 #include "factory-actor.h"
 
-static BYTE reqRegs[8] = { 170, 5, 14, 31, 0, 1, 3, 85  };
+static BYTE reqRegs[8] = {  170, 5, 14, 31, 0, 1, 3, 85  };
 static BYTE reqParams[8] = { 170, 5, 14, 31, 0, 1, 4, 85  };
-static BYTE sensorIndex = 0;
+static BYTE sensorIndex = 25;
 
-static void UartHandleRegisterPackage(PUARTPACKAGE pBuffer)
+static void UartHandleRegisterPackage(PBYTE pBuffer)
 {
 	BYTE regCount;
 	BYTE index;
+	WORD address = __BUFFER_ADDRESS(pBuffer);
 	PREGISTER pReg;
-	regCount = pBuffer->nLength - 3;
+	regCount = __BUFFER_LENGTH(pBuffer) - 3;
 	regCount = regCount / sizeof(REGISTER);
-	printf("received register report from device %d\n", pBuffer->nAddress);
-	pReg = (PREGISTER)(pBuffer->pData);
+	printf("received register report from device %d\n", address);
+	pReg = (PREGISTER)(__BUFFER_DATA(pBuffer));
 	for (index = 0; index < regCount; index++)
 	{
 		printf("Register: %d, value: %d\n", pReg->reg, pReg->value);
-		SensorUpdateReg(pBuffer->nAddress, pReg->reg, pReg->value);
+		SensorUpdateReg(address, pReg->reg, pReg->value);
 		pReg++;
 	}
-//	SensorSendStates(pBuffer->nAddress);
-	SensorSendSingleState(pBuffer->nAddress, TYPE_TEMP);
-	SensorSendSingleState(pBuffer->nAddress, TYPE_HUMI);
+	printf("temp = %d\n", ((WORD)SensorGetReg(address, TEMP_HIGH_REG) << 8) +
+			SensorGetReg(address, TEMP_LOW_REG));
+	printf("humi = %d\n", ((WORD)SensorGetReg(address, HUMI_HIGH_REG) << 8) +
+				SensorGetReg(address, HUMI_LOW_REG));
+//	SensorSendStates(address);
+	SensorSendSingleState(address, TYPE_TEMP);
+	SensorSendSingleState(address, TYPE_HUMI);
 }
 
-static void UartHandleParameterPackage(PUARTPACKAGE pBuffer)
+static void UartHandleParameterPackage(PBYTE pBuffer)
 {
 	BYTE paramCount;
 	BYTE index;
 	PPARAMETER pParam;
-	paramCount = pBuffer->nLength - 3;
+	WORD address = __BUFFER_ADDRESS(pBuffer);
+	paramCount = __BUFFER_LENGTH(pBuffer) - 3;
 	paramCount = paramCount / sizeof(PARAMETER);
-	printf("received parameter report from device %d\n", pBuffer->nAddress);
-	pParam = (PPARAMETER)(pBuffer->pData);
+	printf("received parameter report from device %d\n", address);
+	pParam = (PPARAMETER)(__BUFFER_DATA(pBuffer));
 	for (index = 0; index < paramCount; index++)
 	{
 		printf("Parameter: %d, value: %d\n", pParam->param, pParam->value);
-		SensorUpdateParam(pBuffer->nAddress, pParam->param, pParam->value);
+		SensorUpdateParam(address, pParam->param, pParam->value);
 		pParam++;
 	}
 }
 
 void UartHandleBuffer(PBYTE pBuffer, BYTE size)
 {
-	PUARTPACKAGE uartPackage = _UARTPACKAGE(pBuffer);
-	switch (uartPackage->nType)
+	switch (__BUFFER_TYPE(pBuffer))
 	{
 	case PACKAGE_TYPE_DEVICE_REGISTER:
-		UartHandleRegisterPackage(uartPackage);
+		UartHandleRegisterPackage(pBuffer);
 		break;
 	case PACKAGE_TYPE_DEVICE_PARAM:
-		UartHandleParameterPackage(uartPackage);
+		UartHandleParameterPackage(pBuffer);
 		break;
 	default:
 		break;
@@ -69,12 +74,12 @@ void UartHandleBuffer(PBYTE pBuffer, BYTE size)
 
 void UartSendSensorRequestRegister(PSERIAL pSerial)
 {
-	PUARTPACKAGE pPackage = (PUARTPACKAGE)reqRegs;
+	PBYTE pBuffer = reqRegs;
 	printf("request sensor %d\n", sensorIndex);
-	pPackage->nAddress = GetSensorAddress(sensorIndex);
+	__BUFFER_ADDRESS(pBuffer) = GetSensorAddress(sensorIndex);
 	SerialOutput(pSerial, reqRegs, sizeof(reqRegs));
-	pPackage = (PUARTPACKAGE)reqParams;
-	pPackage->nAddress = GetSensorAddress(sensorIndex);
+	pBuffer = reqParams;
+	__BUFFER_ADDRESS(pBuffer) = GetSensorAddress(sensorIndex);
 	SerialOutput(pSerial, reqParams, sizeof(reqParams));
 	sensorIndex++;
 	if(sensorIndex == NUMBER_OF_SENSORS)

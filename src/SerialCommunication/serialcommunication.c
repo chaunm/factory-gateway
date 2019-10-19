@@ -90,6 +90,7 @@ VOID SerialClose(PSERIAL pSerialPort)
  */
 static VOID SerialHandleIncomingByte(PSERIAL pSerialPort, BYTE byData)
 {
+	printf("index %d, byte %d\n", g_nPackageIndex, byData);
 	if ((g_nPackageIndex == 0) && (byData == PACKAGE_START_BYTE))
 	{
 		g_pReceivePackage[g_nPackageIndex] = PACKAGE_START_BYTE;
@@ -103,11 +104,12 @@ static VOID SerialHandleIncomingByte(PSERIAL pSerialPort, BYTE byData)
 			g_nPackageIndex++; // to get the size of the package
 			QueuePush((void *)g_pReceivePackage, g_nPackageIndex, pSerialPort->pInputQueue);
 			g_nPackageIndex = 0;
+			g_pReceivePackage[1] = 0; //reset length
 		}
 		else
 		{
+			printf("Invalid package received %d\n", g_nPackageIndex);
 			g_nPackageIndex = 0;
-			printf("Invalid package received");
 		}
 	}
 	else if (g_nPackageIndex != 0)
@@ -134,6 +136,7 @@ static VOID SerialHandleIncomingByte(PSERIAL pSerialPort, BYTE byData)
 static VOID SerialHandleIncomingBuffer(PSERIAL pSerialPort, PBYTE pBuffer, BYTE nSize)
 {
 	BYTE nReceiveIndex;
+	printf("handle %d incoming bytes\n", nSize);
 	for (nReceiveIndex = 0; nReceiveIndex < nSize; nReceiveIndex++)
 	{
 		SerialHandleIncomingByte(pSerialPort, pBuffer[nReceiveIndex]);
@@ -157,7 +160,7 @@ VOID SerialProcessIncomingData(PSERIAL pSerialPort)
 		while (byReceiveByte > 0)
 		{
 			SerialHandleIncomingBuffer(pSerialPort, pReceiveBuffer, byReceiveByte);
-			usleep(30);
+			usleep(100);
 			byReceiveByte = read(pSerialPort->tty_fd, pReceiveBuffer, 255);
 		}
 		usleep(1000);

@@ -44,7 +44,7 @@ VOID SensorInit()
 	int i, j;
 	for (i = 0; i < NUMBER_OF_SENSORS; i++)
 	{
-		sensorList[i].address = i + 2;	// change due to node assignment -chau nguyen
+		sensorList[i].address = i + 32;	// change due to node assignment -chau nguyen
 		sensorList[i].Humi = 0;
 		sensorList[i].Temp = 0;
 		sensorList[i].timeout = FALSE;
@@ -71,6 +71,19 @@ VOID SensorUpdateReg(WORD address, BYTE reg, BYTE value)
 			break;
 		}
 	}
+}
+
+BYTE SensorGetReg(WORD address, BYTE reg)
+{
+	int i;
+	for (i = 0; i < NUMBER_OF_SENSORS; i++)
+	{
+		if (sensorList[i].address == address)
+		{
+			return sensorList[i].regs[reg];
+		}
+	}
+	return 0;
 }
 
 VOID SensorUpdateParam(WORD address, WORD param, WORD value)

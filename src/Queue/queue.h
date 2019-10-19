@@ -17,7 +17,7 @@
 #define QUEUE_ACTIVE	0
 #define QUEUE_WAIT		1
 
-#pragma pack(1)
+//#pragma pack(1)
 typedef struct tagQueueControl {
 	BYTE nQueueSize;
 	BYTE nBufferSize;
@@ -29,7 +29,7 @@ typedef struct tagQueueControl {
 	pthread_mutex_t lock;
 } QUEUECONTROL, *PQUEUECONTROL;
 
-#pragma pack(1)
+//#pragma pack(1)
 typedef struct tagQueueContent {
 	BYTE nSize;
 	PBYTE pData;

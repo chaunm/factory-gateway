@@ -113,7 +113,7 @@ int ActorConnect(PACTOR pActor)
     int rc;
     int status;
     struct mosquitto* client;
-    static int mqttProtocol = MQTT_PROTOCOL_V31;
+    static int mqttProtocol = MQTT_PROTOCOL_V311;
     if (pActor->client == NULL)
     {
     	client = mosquitto_new(pActor->options.guid, TRUE, (void*)pActor);
@@ -133,7 +133,7 @@ int ActorConnect(PACTOR pActor)
     	{
     		status = mosquitto_tls_set(client, pActor->options.caCert, NULL, pActor->options.clientCrt, pActor->options.clientKey, ActorPswCallback);
     		printf("%s set tsl %d\n", pActor->options.guid, status);
-    		status = mosquitto_tls_insecure_set(pActor->client, 0);
+    		status = mosquitto_tls_insecure_set(pActor->client, 1);
     		printf("tsl set insecure status  %d\n", status);
     		status = mosquitto_tls_opts_set(client, 0, "tlsv1.1", NULL);
     		printf("%s set tsl opt %d\n", pActor->options.guid, status);
