@@ -140,9 +140,9 @@ int ActorConnect(PACTOR pActor)
     		printf("%s set tsl opt %d\n", pActor->options.guid, status);
     	}
     	// set user and password if needed
-    	if ((pActor->options.guid != NULL ) && (pActor->options.psw != NULL))
+    	if ((pActor->options.user != NULL ) && (pActor->options.psw != NULL))
     	{
-    		printf("set username: %s, password: %s\n", pActor->options.guid, pActor->options.psw);
+    		printf("set username: %s, password: %s\n", pActor->options.user, pActor->options.psw);
     	}
     		mosquitto_username_pw_set(client, pActor->options.user, pActor->options.psw);
     }
