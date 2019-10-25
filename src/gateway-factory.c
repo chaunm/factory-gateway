@@ -27,7 +27,7 @@
 
 void PrintHelpMenu()
 {
-	printf("usage: gateway-factory --host <mqtt_broker> --port <mqtt-port> --id <user name> --password <user password>"\
+	printf("usage: gateway-factory --host <mqtt_broker> --port <mqtt-port> --id <client id> --user <user name> --password <user password>"\
 			"--serial <UART port> --cafile <ca-file> --cert <client cert> --key <client key>\n");
 }
 
@@ -47,6 +47,7 @@ int main(int argc, char* argv[])
 	// specific the expected option
 	static struct option long_options[] = {
 			{"id",      required_argument, 0, 'i' },
+			{"user", required_argument, 0, 'u'},
 			{"password", 	required_argument, 0, 'p' },
 			{"serial",    required_argument, 0, 's' },
 			{"host", required_argument, 0, 'H'},
@@ -69,6 +70,9 @@ int main(int argc, char* argv[])
 			break;
 		case 'i':
 			actorOption.guid = StrDup(optarg);
+			break;
+		case u:
+			actorOption.user = StrDup(optarg);
 			break;
 		case 'p':
 			actorOption.psw = StrDup(optarg);
@@ -99,7 +103,7 @@ int main(int argc, char* argv[])
 			break;
 		}
 	}
-	if ((SerialPort == NULL) || (actorOption.guid == NULL))
+	if ((SerialPort == NULL) || (actorOption.guid == NULL) || (actorOption.user) == NULL))
 	{
 		printf("invalid options, using -h for help\n");
 		return EXIT_FAILURE;

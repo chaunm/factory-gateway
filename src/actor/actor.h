@@ -24,6 +24,7 @@ typedef void* CallbackParam;
 //#pragma pack (1)
 typedef struct tagACTOROPTION {
 	char* guid;
+	char* user; 
 	char* psw;
 	char* host;
 	WORD port;
@@ -60,7 +61,7 @@ char* ActorMakeTopicName(const char* messageType, const char* guid, char* topic)
  * 		CALLBACK_RETAIN: callback is triggered every time event occurs
  */
 
-PACTOR ActorCreate(char* guid, char* psw, char* host, WORD port, char* ca, char* clientCrt, char* clientKey);
+PACTOR ActorCreate(char* guid, char* user, char* psw, char* host, WORD port, char* ca, char* clientCrt, char* clientKey);
 /* Delete an actor */
 void ActorDelete(PACTOR pActor);
 /* Actor publish a message to topicName and trigger a callback for response handling */

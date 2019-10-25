@@ -47,13 +47,14 @@ char* ActorMakeTopicName(const char* messageType, const char* guid, char* topic)
 	return topicName;
 }
 
-PACTOR ActorCreate(char* guid, char* psw, char* host, WORD port, char* ca, char* clientCrt, char* clientKey)
+PACTOR ActorCreate(char* guid, char* user, char* psw, char* host, WORD port, char* ca, char* clientCrt, char* clientKey)
 {
 	if ((guid == NULL))
 		return NULL;
 	PACTOR pActor = (PACTOR)malloc(sizeof(ACTOR));
 	memset(pActor, 0, sizeof(ACTOR));
 	pActor->options.guid = StrDup(guid);
+	pActor->options.user = StrDup(user);
 	pActor->options.psw = StrDup(psw);
 	if (host != NULL)
 		pActor->options.host = StrDup(host);
@@ -143,7 +144,7 @@ int ActorConnect(PACTOR pActor)
     	{
     		printf("set username: %s, password: %s\n", pActor->options.guid, pActor->options.psw);
     	}
-    		mosquitto_username_pw_set(client, pActor->options.guid, pActor->options.psw);
+    		mosquitto_username_pw_set(client, pActor->options.user, pActor->options.psw);
     }
     else
     	client = pActor->client;
