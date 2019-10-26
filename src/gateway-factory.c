@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
 	};
 	int long_index;
 	/* Process option */
-	while ((opt = getopt_long(argc, argv,":hi:p:s:H:P:c:r:k:",
+	while ((opt = getopt_long(argc, argv,":hi:p:s:H:P:c:r:k:u:",
 			long_options, &long_index )) != -1) {
 		switch (opt) {
 		case 'h' :
@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
 		case 'i':
 			actorOption.guid = StrDup(optarg);
 			break;
-		case u:
+		case 'u':
 			actorOption.user = StrDup(optarg);
 			break;
 		case 'p':
@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
 			break;
 		}
 	}
-	if ((SerialPort == NULL) || (actorOption.guid == NULL) || (actorOption.user) == NULL))
+	if ((SerialPort == NULL) || (actorOption.guid == NULL) || (actorOption.user == NULL))
 	{
 		printf("invalid options, using -h for help\n");
 		return EXIT_FAILURE;

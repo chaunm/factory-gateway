@@ -114,7 +114,7 @@ int ActorConnect(PACTOR pActor)
     int rc;
     int status;
     struct mosquitto* client;
-    static int mqttProtocol = MQTT_PROTOCOL_V311;
+    static int mqttProtocol = MQTT_PROTOCOL_V31;
     if (pActor->client == NULL)
     {
     	client = mosquitto_new(pActor->options.guid, TRUE, (void*)pActor);
@@ -155,7 +155,7 @@ int ActorConnect(PACTOR pActor)
     printf("%s connected to %s at port %d\n", pActor->options.guid, pActor->options.host, pActor->options.port);
     printf("id: %s, password: %s\n", pActor->options.guid, pActor->options.psw);
     pActor->connected = 0;
-    rc = mosquitto_connect(client, pActor->options.host, pActor->options.port, 60);
+    rc = mosquitto_connect(client, pActor->options.host, pActor->options.port, 300);
     printf("%s connect to %s:%d , status %d\n", pActor->options.guid, pActor->options.host,
     				pActor->options.port, rc);
     if (rc != MOSQ_ERR_SUCCESS)

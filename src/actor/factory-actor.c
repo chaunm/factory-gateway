@@ -14,9 +14,9 @@
 static PACTOR pFactoryActor;
 pthread_t factoryThread;
 
-static void FactoryActorCreat(char* guid, char* psw, char* host, WORD port, char* ca, char* clientCrt, char* clientKey)
+static void FactoryActorCreate(char* guid, char* user, char* psw, char* host, WORD port, char* ca, char* clientCrt, char* clientKey)
 {
-	pFactoryActor = ActorCreate(guid, psw, host, port, ca, clientCrt, clientKey);
+	pFactoryActor = ActorCreate(guid, user, psw, host, port, ca, clientCrt, clientKey);
 	if (pFactoryActor == NULL)
 	{
 		printf("Couldn't create actor\n");
@@ -27,7 +27,7 @@ static void FactoryActorCreat(char* guid, char* psw, char* host, WORD port, char
 static void FactoryActorProcess(PACTOROPTION option)
 {
 	mosquitto_lib_init();
-	FactoryActorCreat(option->guid, option->psw, option->host, option->port, option->caCert, option->clientCrt, option->clientKey);
+	FactoryActorCreate(option->guid, option->user, option->psw, option->host, option->port, option->caCert, option->clientCrt, option->clientKey);
 	if (pFactoryActor == NULL)
 	{
 		mosquitto_lib_cleanup();
