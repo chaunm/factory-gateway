@@ -47,13 +47,14 @@ char* ActorMakeTopicName(const char* messageType, const char* guid, char* topic)
 	return topicName;
 }
 
-PACTOR ActorCreate(char* guid, char* psw, char* host, WORD port, char* ca, char* clientCrt, char* clientKey)
+PACTOR ActorCreate(char* guid, char* user, char* psw, char* host, WORD port, char* ca, char* clientCrt, char* clientKey)
 {
 	if ((guid == NULL))
 		return NULL;
 	PACTOR pActor = (PACTOR)malloc(sizeof(ACTOR));
 	memset(pActor, 0, sizeof(ACTOR));
 	pActor->options.guid = StrDup(guid);
+	pActor->options.user = StrDup(user);
 	pActor->options.psw = StrDup(psw);
 	if (host != NULL)
 		pActor->options.host = StrDup(host);
@@ -139,11 +140,11 @@ int ActorConnect(PACTOR pActor)
     		printf("%s set tsl opt %d\n", pActor->options.guid, status);
     	}
     	// set user and password if needed
-    	if ((pActor->options.guid != NULL ) && (pActor->options.psw != NULL))
+    	if ((pActor->options.user != NULL ) && (pActor->options.psw != NULL))
     	{
-    		printf("set username: %s, password: %s\n", pActor->options.guid, pActor->options.psw);
+    		printf("set username: %s, password: %s\n", pActor->options.user, pActor->options.psw);
     	}
-    		mosquitto_username_pw_set(client, pActor->options.guid, pActor->options.psw);
+    		mosquitto_username_pw_set(client, pActor->options.user, pActor->options.psw);
     }
     else
     	client = pActor->client;
@@ -154,7 +155,7 @@ int ActorConnect(PACTOR pActor)
     printf("%s connected to %s at port %d\n", pActor->options.guid, pActor->options.host, pActor->options.port);
     printf("id: %s, password: %s\n", pActor->options.guid, pActor->options.psw);
     pActor->connected = 0;
-    rc = mosquitto_connect(client, pActor->options.host, pActor->options.port, 60);
+    rc = mosquitto_connect(client, pActor->options.host, pActor->options.port, 300);
     printf("%s connect to %s:%d , status %d\n", pActor->options.guid, pActor->options.host,
     				pActor->options.port, rc);
     if (rc != MOSQ_ERR_SUCCESS)
