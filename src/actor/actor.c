@@ -114,7 +114,7 @@ int ActorConnect(PACTOR pActor)
     int rc;
     int status;
     struct mosquitto* client;
-    static int mqttProtocol = MQTT_PROTOCOL_V31;
+    static int mqttProtocol = MQTT_PROTOCOL_V311;
     if (pActor->client == NULL)
     {
     	client = mosquitto_new(pActor->options.guid, TRUE, (void*)pActor);
