@@ -35,8 +35,8 @@ static void FactoryActorProcess(PACTOROPTION option)
 	}
 	while(1)
 	{
-		mosquitto_loop(pFactoryActor->client, 0, 1);
-		usleep(10000);
+//		mosquitto_loop(pFactoryActor->client, 0, 1);
+		sleep(1000);
 	}
 	mosquitto_disconnect(pFactoryActor->client);
 	mosquitto_destroy(pFactoryActor->client);
