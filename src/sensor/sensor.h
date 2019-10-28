@@ -33,7 +33,8 @@ enum {
 
 typedef enum {
 	TYPE_TEMP = 0,
-	TYPE_HUMI
+	TYPE_HUMI,
+	TYPE_ALARM
 } sensor_t;
 
 //#pragma pack (1)
@@ -55,9 +56,10 @@ typedef struct tagSENSOR {
 void SensorInit();
 VOID SensorUpdateReg(WORD address, BYTE reg, BYTE value);
 VOID SensorUpdateParam(WORD address, WORD param, WORD value);
+BYTE SensorGetReg(WORD address, BYTE reg);
 WORD GetSensorAddress(BYTE nIndex);
 VOID SensorSendStates(WORD address);
 VOID SensorSendSingleState(WORD address, sensor_t type);
-BYTE SensorGetReg(WORD address, BYTE reg);
+VOID SensorSendAlert(WORD address, sensor_t type, int value);
 
 #endif /* SENSOR_H_ */

@@ -37,6 +37,14 @@ static void UartHandleRegisterPackage(PBYTE pBuffer)
 //	SensorSendStates(address);
 	SensorSendSingleState(address, TYPE_TEMP);
 	SensorSendSingleState(address, TYPE_HUMI);
+	if (SensorGetReg(address, HUMI_ALARM_REG) == 1)
+	{
+		SensorSendAlert(address, TYPE_HUMI, 1);
+	}
+	if (SensorGetReg(address, TEMP_ALARM_REG) == 1)
+	{
+		SensorSendAlert(address, TYPE_TEMP, 1);
+	}
 }
 
 static void UartHandleParameterPackage(PBYTE pBuffer)

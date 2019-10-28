@@ -188,7 +188,7 @@ VOID SensorSendSingleState(WORD address, sensor_t type)
 	json_object_set(eventJson, "type", typeJson);
 	json_object_set(eventJson, "originator", originatorJson);
 	json_object_set(eventJson, "deviceToken", tokenJson);
-	json_object_set(eventJson, "address", addressJson);
+	json_object_set(eventJson, "thing_id", addressJson);
 	json_decref(addressJson);
 	json_decref(typeJson);
 	json_decref(originatorJson);
@@ -237,4 +237,56 @@ VOID SensorSendSingleState(WORD address, sensor_t type)
 	json_decref(eventJson);
 	FactoryActorSend("SiteWhere/factory/input/json", eventMessage);
 	free(eventMessage);
+}
+
+VOID SensorSendAlert(WORD address, sensor_t type, int value)
+{
+	BYTE nIndex;
+	char timeJsonString[80];
+	char ipString[16];
+	for (nIndex = 0; nIndex < NUMBER_OF_SENSORS; nIndex++)
+		if (sensorList[nIndex].address == address)
+			break;
+	memset(ipString, 0, sizeof(ipString));
+	memset(timeJsonString, 0, sizeof(timeJsonString));
+	SensorCreateEventDate(timeJsonString);
+	GetIpAddress(ipString);
+	json_t* eventJson = json_object();
+	json_t* typeJson = json_string("DeviceAlert");
+	json_t* addressJson = json_integer(sensorList[nIndex].address);
+	json_t* originatorJson = json_string("Factory");
+	json_t* tokenJson = json_string(ipString);
+	json_object_set(eventJson, "type", typeJson);
+	json_object_set(eventJson, "originator", originatorJson);
+	json_object_set(eventJson, "deviceToken", tokenJson);
+	json_object_set(eventJson, "thing_id", addressJson);
+	json_decref(addressJson);
+	json_decref(typeJson);
+	json_decref(originatorJson);
+	json_decref(tokenJson);
+	json_t* requestJson = json_object();
+	json_t* messageJson;
+	json_t* timeJson = json_string(timeJsonString);
+	typeJson = json_string("Warning");
+	if (type == TYPE_TEMP)
+	{
+		messageJson = json_string("temp");
+	}
+	else
+	{
+		messageJson = json_string("humi");
+	}
+	json_object_set(requestJson, "type", typeJson);
+	json_object_set(requestJson, "message", messageJson);
+	json_object_set(requestJson, "eventDate", timeJson);
+	json_decref(typeJson);
+	json_decref(messageJson);
+	json_decref(timeJson);
+	json_object_set(eventJson, "request", requestJson);
+	json_decref(requestJson);
+	char* eventMessage = json_dumps(eventJson, JSON_INDENT(4) | JSON_REAL_PRECISION(4));
+	json_decref(eventJson);
+	FactoryActorSend("SiteWhere/factory/input/json", eventMessage);
+	free(eventMessage);
+
 }

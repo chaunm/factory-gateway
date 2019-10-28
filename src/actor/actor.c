@@ -16,9 +16,6 @@
 //#include "common/ActorParser.h"
 #include "unistd.h"
 
-#ifdef TLS_CERT_PSW_ENABLE
-static char* encryptedKeyPass = "c1h9a8u6";
-#endif
 
 static int ActorConnect(PACTOR pACtor);
 static void ActorOnMessage(struct mosquitto* client, void* context, const struct mosquitto_message* message);
@@ -26,18 +23,6 @@ static void ActorOnOffline(struct mosquitto* client, void * context, int cause);
 static void ActorOnConnect(struct mosquitto* client, void* context, int result);
 static void ActorOnDelivered(struct mosquitto* client, void* context, int dt);
 
-#ifdef TLS_CERT_PSW_ENABLE
-static int ActorPswCallback(char* buffer, int size, int rwflag, void* userdata)
-{
-	strncpy(buffer, encryptedKeyPass, size);
-	return sizeof(encryptedKeyPass);
-}
-#else
-static int ActorPswCallback(char* buffer, int size, int rwflag, void* userdata)
-{
-	return 0;
-}
-#endif
 
 char* ActorMakeTopicName(const char* messageType, const char* guid, char* topic)
 {
@@ -93,6 +78,7 @@ void ActorDelete(PACTOR pActor)
 	mosquitto_destroy(pActor->client);
 	free(pActor->options.guid);
 	free(pActor->options.host);
+	free(pActor->options.user);
 	if (pActor->options.psw != NULL)
 		free(pActor->options.psw);
 	if (pActor->options.caCert != NULL)
@@ -106,7 +92,7 @@ void ActorDelete(PACTOR pActor)
 
 void ActorLogCallback(struct mosquitto *mosq, void *obj, int level, const char *str)
 {
-    printf("LOG: %s\n", str);
+    printf("%s\n", str);
 }
 
 int ActorConnect(PACTOR pActor)
@@ -117,6 +103,7 @@ int ActorConnect(PACTOR pActor)
     static int mqttProtocol = MQTT_PROTOCOL_V311;
     if (pActor->client == NULL)
     {
+    	printf("create mosquitto client with id %s\n", pActor->options.guid);
     	client = mosquitto_new(pActor->options.guid, TRUE, (void*)pActor);
     	pActor->client = client;
 
@@ -126,16 +113,16 @@ int ActorConnect(PACTOR pActor)
     	mosquitto_message_callback_set(client, ActorOnMessage);
     	mosquitto_publish_callback_set(client, ActorOnDelivered);
     	mosquitto_opts_set(client, MOSQ_OPT_PROTOCOL_VERSION, &mqttProtocol);
-#ifdef MQTT_LOG
-    	mosquitto_log_callback_set(client, ActorLogCallback);
-#endif
+    	//logging
+//    	mosquitto_log_callback_set(client, ActorLogCallback);
+
     	// set tls option
     	if ((pActor->options.caCert != NULL) && (pActor->options.clientCrt != NULL) && (pActor->options.clientKey != NULL))
     	{
-    		status = mosquitto_tls_set(client, pActor->options.caCert, NULL, pActor->options.clientCrt, pActor->options.clientKey, ActorPswCallback);
-    		printf("%s set tsl %d\n", pActor->options.guid, status);
-    		status = mosquitto_tls_insecure_set(pActor->client, 1);
-    		printf("tsl set insecure status  %d\n", status);
+    		status = mosquitto_tls_set(client, pActor->options.caCert, NULL, pActor->options.clientCrt, pActor->options.clientKey, NULL);
+    		printf("%s mosquitto_tls_set status: %d\n", pActor->options.guid, status);
+//    		status = mosquitto_tls_insecure_set(pActor->client, true);
+//    		printf("tsl set insecure status  %d\n", status);
     		status = mosquitto_tls_opts_set(client, 0, "tlsv1.1", NULL);
     		printf("%s set tsl opt %d\n", pActor->options.guid, status);
     	}
@@ -143,8 +130,8 @@ int ActorConnect(PACTOR pActor)
     	if ((pActor->options.user != NULL ) && (pActor->options.psw != NULL))
     	{
     		printf("set username: %s, password: %s\n", pActor->options.user, pActor->options.psw);
-    	}
     		mosquitto_username_pw_set(client, pActor->options.user, pActor->options.psw);
+    	}
     }
     else
     	client = pActor->client;
@@ -153,9 +140,10 @@ int ActorConnect(PACTOR pActor)
 
     //connect to broker
     printf("%s connected to %s at port %d\n", pActor->options.guid, pActor->options.host, pActor->options.port);
-    printf("id: %s, password: %s\n", pActor->options.guid, pActor->options.psw);
+    printf("user: %s, password: %s\n", pActor->options.user, pActor->options.psw);
     pActor->connected = 0;
-    rc = mosquitto_connect(client, pActor->options.host, pActor->options.port, 300);
+    rc = mosquitto_loop_start(client);
+    rc = mosquitto_connect_async(client, pActor->options.host, pActor->options.port, 60);
     printf("%s connect to %s:%d , status %d\n", pActor->options.guid, pActor->options.host,
     				pActor->options.port, rc);
     if (rc != MOSQ_ERR_SUCCESS)
