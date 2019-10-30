@@ -9,5 +9,6 @@
 #define DATA_HANDLER_H_
 #include "uart-data.h"
 
+void HandleRequestConfig(const char* thingId, const char* param, WORD value);
 
 #endif /* DATA_HANDLER_H_ */

@@ -14,6 +14,10 @@
 #define __BUFFER_ADDRESS(pBuffer)	(*(PWORD)(pBuffer + 3))
 #define __BUFFER_DATA(pBuffer)		(pBuffer + 5)
 
+// set param package
+#define __BUFFER_PARAM_SET(pBuffer) (*(PWORD)(pBuffer + 5))
+#define __BUFFER_PARAM_VALUE
+
 #define _UARTPACKAGE(pBuffer)  (PUARTPACKAGE)(pBuffer)
 
 #define PACKAGE_TYPE_DEVICE_REGISTER	0x0E	// 14
@@ -21,5 +25,6 @@
 #define PACKAGE_TYPE_DEVICE_FLASH       0x38
 
 void UartHandleBuffer(PBYTE pBuffer, BYTE size);
-void UartSendSensorRequestRegister(PSERIAL pSerial);
+void UartRequestSentParamSet(WORD address, WORD param, WORD value);
+void UartSendProcess(PSERIAL pSerial);
 #endif /* UART_DATA_H_ */

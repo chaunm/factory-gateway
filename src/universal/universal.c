@@ -59,3 +59,8 @@ VOID GetIpAddress(char* ip)
 	/* return result */
 	sprintf(ip, "%s", inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr));
 }
+
+VOID MakeSensorUUID(char* string, WORD address)
+{
+	sprintf(string, "sensor%d-%s", address, DEVICE_UUID);
+}
