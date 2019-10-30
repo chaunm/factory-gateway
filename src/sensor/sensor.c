@@ -161,13 +161,13 @@ VOID SensorSendSingleState(WORD address, sensor_t type)
 	BYTE nIndex;
 	float value;
 	char timeJsonString[80];
-	char ipString[16];
+	char tokenString[50];
 	for (nIndex = 0; nIndex < NUMBER_OF_SENSORS; nIndex++)
 		if (sensorList[nIndex].address == address)
 			break;
-	memset(ipString, 0, sizeof(ipString));
+	memset(tokenString, 0, sizeof(tokenString));
 	SensorCreateEventDate(timeJsonString);
-	GetIpAddress(ipString);
+	sprintf(tokenString, "sensor%d-%s", address, DEVICE_UUID);
 	if (type == TYPE_TEMP)
 	{
 		sensorList[nIndex].Temp = (WORD)(sensorList[nIndex].regs[TEMP_HIGH_REG]) << 8;
@@ -184,7 +184,7 @@ VOID SensorSendSingleState(WORD address, sensor_t type)
 	json_t* typeJson = json_string("DeviceMeasurement");
 	json_t* addressJson = json_integer(sensorList[nIndex].address);
 	json_t* originatorJson = json_string("Factory");
-	json_t* tokenJson = json_string(ipString);
+	json_t* tokenJson = json_string(tokenString);
 	json_object_set(eventJson, "type", typeJson);
 	json_object_set(eventJson, "originator", originatorJson);
 	json_object_set(eventJson, "deviceToken", tokenJson);
@@ -243,19 +243,19 @@ VOID SensorSendAlert(WORD address, sensor_t type, int value)
 {
 	BYTE nIndex;
 	char timeJsonString[80];
-	char ipString[16];
+	char tokenString[50];
 	for (nIndex = 0; nIndex < NUMBER_OF_SENSORS; nIndex++)
 		if (sensorList[nIndex].address == address)
 			break;
-	memset(ipString, 0, sizeof(ipString));
+	memset(tokenString, 0, sizeof(tokenString));
 	memset(timeJsonString, 0, sizeof(timeJsonString));
 	SensorCreateEventDate(timeJsonString);
-	GetIpAddress(ipString);
+	sprintf(tokenString, "sensor%d-%s", address, DEVICE_UUID);
 	json_t* eventJson = json_object();
 	json_t* typeJson = json_string("DeviceAlert");
 	json_t* addressJson = json_integer(sensorList[nIndex].address);
 	json_t* originatorJson = json_string("Factory");
-	json_t* tokenJson = json_string(ipString);
+	json_t* tokenJson = json_string(tokenString);
 	json_object_set(eventJson, "type", typeJson);
 	json_object_set(eventJson, "originator", originatorJson);
 	json_object_set(eventJson, "deviceToken", tokenJson);

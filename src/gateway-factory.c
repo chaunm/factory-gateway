@@ -157,7 +157,7 @@ int main(int argc, char* argv[])
 	while (1)
 	{
 //		DeviceProcessTimeout();
-		UartSendSensorRequestRegister(pSerialPort);
+		UartSendProcess(pSerialPort);
 		usleep(1500000);
 	}
 	SerialClose(pSerialPort);

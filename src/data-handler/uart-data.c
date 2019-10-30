@@ -12,7 +12,10 @@
 
 static BYTE reqRegs[8] = {  170, 5, 14, 31, 0, 1, 3, 85  };
 static BYTE reqParams[8] = { 170, 5, 14, 31, 0, 1, 4, 85  };
+static BYTE setParams[10] = { 170, 7, 15, 31, 0, 0, 0, 0, 0, 85 };
 static BYTE sensorIndex = 25;
+static BOOL setParam = FALSE;
+static PSERIAL serialPort = NULL;
 
 static void UartHandleRegisterPackage(PBYTE pBuffer)
 {
@@ -80,6 +83,26 @@ void UartHandleBuffer(PBYTE pBuffer, BYTE size)
 	}
 }
 
+void UartSendParamSet(PSERIAL pSerial, WORD address, WORD param, WORD value)
+{
+	PBYTE pBuffer = setParams;
+	PPARAMETER pParam;
+	printf("send param_set param: %d, value: %d\n", param, value);
+	__BUFFER_ADDRESS(pBuffer) = address;
+	pParam = (PPARAMETER)(__BUFFER_DATA(pBuffer));
+	pParam->param = param;
+	pParam->value = value;
+	SerialOutput(pSerial, setParams, sizeof(setParams));
+}
+
+void UartRequestSentParamSet(WORD address, WORD param, WORD value)
+{
+	if (serialPort == NULL)
+		return;
+	UartSendParamSet(serialPort, address, param, value);
+	setParam = TRUE;
+}
+
 void UartSendSensorRequestRegister(PSERIAL pSerial)
 {
 	PBYTE pBuffer = reqRegs;
@@ -94,3 +117,19 @@ void UartSendSensorRequestRegister(PSERIAL pSerial)
 		sensorIndex = 0;
 
 }
+
+void UartSendProcess(PSERIAL pSerial)
+{
+	serialPort = pSerial;
+	if (setParam == TRUE)
+	{
+		sleep(1);
+		setParam = FALSE;
+	}
+	else
+	{
+		UartSendSensorRequestRegister(serialPort);
+	}
+}
+
+

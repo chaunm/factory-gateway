@@ -15,6 +15,7 @@
 #include "universal.h"
 //#include "common/ActorParser.h"
 #include "unistd.h"
+#include "data-handler.h"
 
 
 static int ActorConnect(PACTOR pACtor);
@@ -24,11 +25,11 @@ static void ActorOnConnect(struct mosquitto* client, void* context, int result);
 static void ActorOnDelivered(struct mosquitto* client, void* context, int dt);
 
 
-char* ActorMakeTopicName(const char* messageType, const char* guid, char* topic)
+char* ActorMakeTopicName()
 {
-	char* topicName = malloc(strlen(messageType) + strlen(guid) + strlen(topic) + 1);
-	memset(topicName, 0, strlen(messageType) + strlen(guid) + strlen(topic) + 1);
-	sprintf(topicName, "%s%s%s", messageType, guid, topic);
+	char* topicName = malloc(strlen("SiteWhere/factory/command/") + strlen(DEVICE_UUID) + 1);
+	memset(topicName, 0, strlen("SiteWhere/factory/command/") + strlen(DEVICE_UUID) + 1);
+	sprintf(topicName, "SiteWhere/factory/command/%s", DEVICE_UUID);
 	return topicName;
 }
 
@@ -175,11 +176,107 @@ char* ActorGetGuid(PACTOR pActor)
 // local function
 
 // chau nguyen: change below function for processing
+// requeset template
+//{"request":{"name":"config","param":"co2","value":"80", "thing_id" : "xxxx"}}
 static void ActorReceive(PACTOR pActor, char* topicName, char* payload)
 {
 	// chau nguyen: any processing add here.
-}
+	json_t* messageJson;
+	json_t* requestJson ;
+	json_t* nameJson;
+	json_t* thingJson;
+	json_t* paramJson;
+	json_t* valueJson;
 
+	messageJson = json_loads(payload, JSON_DECODE_ANY, NULL);
+	if (messageJson == NULL)
+	{
+		return;
+	}
+	requestJson = json_object_get(messageJson, "request");
+	if (requestJson == NULL)
+	{
+		json_decref(messageJson);
+		return;
+	}
+	nameJson = json_object_get(requestJson, "name");
+	if (nameJson == NULL)
+	{
+		json_decref(requestJson);
+		json_decref(messageJson);
+		return;
+	}
+	if (!json_is_string(nameJson))
+	{
+		json_decref(nameJson);
+		json_decref(requestJson);
+		json_decref(messageJson);
+		return;
+	}
+	if (strcmp(json_string_value(nameJson), "config") != 0)
+	{
+		json_decref(nameJson);
+		json_decref(requestJson);
+		json_decref(messageJson);
+		return;
+	}
+	thingJson = json_object_get(requestJson, "thing_id");
+	if (thingJson == NULL)
+	{
+		json_decref(nameJson);
+		json_decref(requestJson);
+		json_decref(messageJson);
+		return;
+	}
+	if (!json_is_string(thingJson))
+	{
+		json_decref(thingJson);
+		json_decref(nameJson);
+		json_decref(requestJson);
+		json_decref(messageJson);
+		return;
+	}
+	paramJson = json_object_get(requestJson, "param");
+	if (paramJson == NULL)
+	{
+		json_decref(thingJson);
+		json_decref(nameJson);
+		json_decref(requestJson);
+		json_decref(messageJson);
+		return;
+	}
+	if (!json_is_string(paramJson))
+	{
+		json_decref(thingJson);
+		json_decref(nameJson);
+		json_decref(paramJson);
+		json_decref(requestJson);
+		json_decref(messageJson);
+		return;
+	}
+	valueJson = json_object_get(requestJson, "value");
+	if (valueJson == NULL)
+	{
+		json_decref(thingJson);
+		json_decref(nameJson);
+		json_decref(paramJson);
+		json_decref(requestJson);
+		json_decref(messageJson);
+		return;
+	}
+	if (json_is_number(valueJson))
+	{
+		WORD value = (WORD)(json_real_value(valueJson) * 10);
+		HandleRequestConfig(json_string_value(thingJson), json_string_value(paramJson), value);
+	}
+	json_decref(thingJson);
+	json_decref(nameJson);
+	json_decref(paramJson);
+	json_decref(valueJson);
+	json_decref(requestJson);
+	json_decref(messageJson);
+
+}
 
 // callback function for MQTTClient event
 static void ActorOnMessage(struct mosquitto* client, void* context, const struct mosquitto_message* message)
@@ -194,6 +291,7 @@ static void ActorOnMessage(struct mosquitto* client, void* context, const struct
 	free(messageContent);
 
 }
+
 
 static void ActorOnOffline(struct mosquitto* client, void * context, int cause)
 {
