@@ -323,7 +323,7 @@ static void ActorOnConnect(struct mosquitto* client, void* context, int result)
 		pActor->connected = 1;
 		// chau nguyen: defaul subcription topic here
 		// topic: action/<name>/#
-		topicName = ActorMakeTopicName("action/", pActor->options.guid, "/#");
+		topicName = ActorMakeTopicName();
 		printf("subscribe to topic %s\n", topicName);
 		mosquitto_subscribe(client, &pActor->DeliveredToken, topicName, QOS);
 		free(topicName);
