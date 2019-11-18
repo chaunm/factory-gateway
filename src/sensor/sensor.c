@@ -229,7 +229,7 @@ VOID SensorSendSingleState(WORD address, sensor_t type)
 	json_decref(unitJson);
 	json_decref(minJson);
 	json_decref(maxJson);
-	json_object_set(requestJson, "meta", metaJson);
+	json_object_set(requestJson, "metadata", metaJson);
 	json_decref(metaJson);
 	json_object_set(eventJson, "request", requestJson);
 	json_decref(requestJson);
