@@ -26,5 +26,6 @@
 
 void UartHandleBuffer(PBYTE pBuffer, BYTE size);
 void UartRequestSentParamSet(WORD address, WORD param, WORD value);
+void UartRequestSentRegisterSet(WORD address, BYTE reg, BYTE value);
 void UartSendProcess(PSERIAL pSerial);
 #endif /* UART_DATA_H_ */

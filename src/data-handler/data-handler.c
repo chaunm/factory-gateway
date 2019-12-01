@@ -49,5 +49,16 @@ void HandleRequestConfig(const char* thingId, const char* param, WORD value)
 	{
 		UartRequestSentParamSet(address, 3, value);
 	}
+	if (strcmp(param, "alert") == 0)
+	{
+		if (value != 0)
+		{			
+			UartRequestSentRegisterSet(address, 23, 1);
+		}
+		else
+		{
+			UartRequestSentRegisterSet(address, 23, 0);
+		}
+	}
 }
 

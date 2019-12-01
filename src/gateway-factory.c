@@ -158,7 +158,7 @@ int main(int argc, char* argv[])
 	{
 //		DeviceProcessTimeout();
 		UartSendProcess(pSerialPort);
-		usleep(1500000);
+		usleep(800000);
 	}
 	SerialClose(pSerialPort);
 	return EXIT_SUCCESS;

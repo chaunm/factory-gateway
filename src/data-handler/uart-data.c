@@ -13,8 +13,11 @@
 static BYTE reqRegs[8] = {  170, 5, 14, 31, 0, 1, 3, 85  };
 static BYTE reqParams[8] = { 170, 5, 14, 31, 0, 1, 4, 85  };
 static BYTE setParams[10] = { 170, 7, 15, 31, 0, 0, 0, 0, 0, 85 };
+static BYTE setRegisters[8] = { 170, 5, 14, 31, 0, 23, 1, 85 };
 static BYTE sensorIndex = 25;
 static BOOL setParam = FALSE;
+static BOOL setRegister = FALSE;
+static BOOL requestRegister = FALSE;
 static PSERIAL serialPort = NULL;
 
 static void UartHandleRegisterPackage(PBYTE pBuffer)
@@ -92,6 +95,7 @@ void UartSendParamSet(PSERIAL pSerial, WORD address, WORD param, WORD value)
 	pParam = (PPARAMETER)(__BUFFER_DATA(pBuffer));
 	pParam->param = param;
 	pParam->value = value;
+	while(requestRegister == TRUE);
 	SerialOutput(pSerial, setParams, sizeof(setParams));
 }
 
@@ -101,6 +105,27 @@ void UartRequestSentParamSet(WORD address, WORD param, WORD value)
 		return;
 	UartSendParamSet(serialPort, address, param, value);
 	setParam = TRUE;
+}
+
+void UartSendRegisterSet(PSERIAL pSerial, WORD address, BYTE reg, BYTE value)
+{
+	PBYTE pBuffer = setRegisters;
+	PREGISTER pReg;
+	printf("send register_set reg: %d, value: %d\n", reg, value);
+	__BUFFER_ADDRESS(pBuffer) = address;
+	pReg = (PREGISTER)(__BUFFER_DATA(pBuffer));
+	pReg->reg = reg;
+	pReg->value = value;
+	while(requestRegister == TRUE);
+	SerialOutput(pSerial, setRegisters, sizeof(setRegisters));
+}
+
+void UartRequestSentRegisterSet(WORD address, BYTE reg, BYTE value)
+{
+	if (serialPort == NULL)
+		return;
+	UartSendRegisterSet(serialPort, address, reg, value);
+	setRegister = TRUE;
 }
 
 void UartSendSensorRequestRegister(PSERIAL pSerial)
@@ -121,14 +146,18 @@ void UartSendSensorRequestRegister(PSERIAL pSerial)
 void UartSendProcess(PSERIAL pSerial)
 {
 	serialPort = pSerial;
-	if (setParam == TRUE)
+	if ((setParam == TRUE) || (setRegister == TRUE))
 	{
 		sleep(1);
 		setParam = FALSE;
+		setRegister = FALSE;
 	}
 	else
 	{
 		UartSendSensorRequestRegister(serialPort);
+		requestRegister = TRUE;
+		usleep(700000);
+		requestRegister = FALSE;
 	}
 }
 
