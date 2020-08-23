@@ -13,6 +13,7 @@ export CC=gcc
 -include src/universal/subdir.mk
 -include src/sensor/subdir.mk
 -include src/data-handler/subdir.mk
+-include src/log/subdir.mk
 -include src/actor/subdir.mk
 -include src/SerialCommunication/subdir.mk
 -include src/Queue/subdir.mk
@@ -54,6 +55,7 @@ CFLAGS += -I"src/Queue"
 CFLAGS += -I"src/sensor"
 CFLAGS += -I"src/SerialCommunication"
 CFLAGS += -I"src/universal"
+CFLAGS += -I"src/log"
 
 # Add inputs and outputs from these tool invocations to the build variables 
 

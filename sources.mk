@@ -30,4 +30,5 @@ src/data-handler \
 src/actor \
 src/SerialCommunication \
 src/Queue \
+src/log \
 

@@ -6,9 +6,12 @@
  */
 #include <stdio.h>
 #include <jansson.h>
+#include <string.h>
 #include "uart-data.h"
 #include "sensor.h"
 #include "factory-actor.h"
+#include "log.h"
+
 
 static BYTE reqRegs[8] = {  170, 5, 14, 31, 0, 1, 3, 85  };
 static BYTE reqParams[8] = { 170, 5, 14, 31, 0, 1, 4, 85  };
@@ -21,6 +24,7 @@ static void UartHandleRegisterPackage(PBYTE pBuffer)
 {
 	BYTE regCount;
 	BYTE index;
+	char Log[255];
 	WORD address = __BUFFER_ADDRESS(pBuffer);
 	PREGISTER pReg;
 	regCount = __BUFFER_LENGTH(pBuffer) - 3;
@@ -37,6 +41,14 @@ static void UartHandleRegisterPackage(PBYTE pBuffer)
 			SensorGetReg(address, TEMP_LOW_REG));
 	printf("humi = %d\n", ((WORD)SensorGetReg(address, HUMI_HIGH_REG) << 8) +
 				SensorGetReg(address, HUMI_LOW_REG));
+	memset(Log, 0, sizeof(Log));
+	sprintf(Log, "temp = %d\n", ((WORD)SensorGetReg(address, TEMP_HIGH_REG) << 8) +
+				SensorGetReg(address, TEMP_LOW_REG));
+	LogWrite(Log);
+	memset(Log, 0, sizeof(Log));
+	sprintf(Log, "humi = %d\n", ((WORD)SensorGetReg(address, HUMI_HIGH_REG) << 8) +
+					SensorGetReg(address, HUMI_LOW_REG));
+	LogWrite(Log);
 //	SensorSendStates(address);
 	SensorSendSingleState(address, TYPE_TEMP);
 	SensorSendSingleState(address, TYPE_HUMI);
