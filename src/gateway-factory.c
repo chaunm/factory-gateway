@@ -18,6 +18,7 @@
 #include "serialcommunication.h"
 #include "universal.h"
 #include "data-handler.h"
+#include "log.h"
 #ifdef PI_RUNNING // include wiringPi to control Pi GPIO for selecting RF mode.
 #include <wiringPi.h>
 #define M0_PIN	22
@@ -127,6 +128,7 @@ int main(int argc, char* argv[])
 	digitalWrite(M1_PIN, LOW);
 #endif
 	// Start MQTT client
+	LogInit();
 	FactorActorStart(&actorOption);
 	
 	/* open serial port and init queue for serial communication */
